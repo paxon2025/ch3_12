@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>學生資料管理系統</title>
+    <style>
+        h1,h2{
+            text-align:center;
+        }
+        table,th,td{
+            border:1px solid black;
+            border-collapse:collapse;
+        }
+        table{
+            margin-left:auto;
+            margin-right:auto;
+            
+        }
+        .head_container{
+            margin-bottom:24px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+   <div class="head_content">
+        <h1 class="title">學生資料管理系統</h1>
+        <h2>目前資料筆數:{{dataCount}}，
+        <a href="/post/">新增學生資料</a>
+       </h2>
+       <br>
+       <div style="text-align:center;">
+            <form action="/index/" method="get">
+                <label for="site_search">搜尋關鍵字:</label>
+                <input type="site_search" id="site_search" name="site_search" placeholder="請輸入關鍵字">
+                <button type="sumbit">搜尋</button>
+            </form>
+        </div>
+        <br>
+   </div>
+
+   <div>
+       {% if status %}
+       <table>
+            <tr>
+                <th>學號</th><th>姓名</th><th>性別</th><th>生日</th>
+                <th>信箱</th><th>電話</th><th>地址</th><th>編輯</th>
+            </tr>
+            {% for data in resultlist %}
+            <tr>
+                <td>{{data.cID}}</td>
+                <td>{{data.cName}}</td>
+                <td>{% if data.cSex == "M" %}男{% else %}女{% endif %}</td>
+                <td>{{data.cBirthday | date:"Y-m-d"}}</td>
+                <td>{{data.cEmail}}</td>
+                <td>{{data.cPhone}}</td>
+                <td>{{data.cAddr}}</td>
+                <td>
+                    <a href="/edit/{{data.cID}}/">編輯</a>
+                 {% comment %} <a href="/edit/?={{data.cID}}/">編輯</a>{% endcomment %}
+                    <a href="/delete/{{data.cID}}/">刪除
+                </td>
+            </tr>
+            {% endfor %}
+       </table>
+       {% else %}
+           <h1>無此資料</h1>
+       {% endif %}
+   </div>
+   
+{% endblock %}

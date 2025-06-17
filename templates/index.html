@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>學生資料管理系統</title>
+    <style>
+        /* Reset and base */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0 20px 40px;
+        }
+
+        /* Header */
+        .head_content {
+            max-width: 900px;
+            margin: 40px auto 30px;
+            text-align: center;
+        }
+
+        h1.title {
+            font-size: 2.8rem;
+            color: #2c3e50;
+            margin-bottom: 0.2em;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-weight: 400;
+            color: #555;
+            font-size: 1.25rem;
+            margin-top: 0;
+        }
+
+        h2 a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        h2 a:hover {
+            color: #1d6fa5;
+        }
+
+        /* Search form */
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+
+        input[type="text"], input[type="site_search"] {
+            padding: 8px 12px;
+            width: 250px;
+            max-width: 80vw;
+            border: 1.5px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="site_search"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        button {
+            padding: 8px 16px;
+            margin-left: 8px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1d6fa5;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            max-width: 900px;
+            margin: 30px auto 0;
+            border-collapse: collapse;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 18px;
+            text-align: center;
+            border-bottom: 1px solid #e1e4e8;
+            font-size: 1rem;
+            color: #444;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        tr:hover {
+            background-color: #f0f8ff;
+        }
+
+        td a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 6px;
+            transition: color 0.3s ease;
+        }
+
+        td a:hover {
+            color: #1d6fa5;
+            text-decoration: underline;
+        }
+
+        /* No data message */
+        .no-data {
+            max-width: 900px;
+            margin: 50px auto;
+            text-align: center;
+            color: #999;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1.title {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1rem;
+            }
+
+            table, th, td {
+                font-size: 0.85rem;
+                padding: 8px 10px;
+            }
+
+            input[type="site_search"] {
+                width: 150px;
+            }
+        }
+        .pagination {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 16px;
+    }
+
+    .pagination a,
+    .pagination span {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 0 4px;
+        text-decoration: none;
+        color: #007BFF;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .pagination a:hover {
+        background-color: #f1f1f1;
+        color: #0056b3;
+    }
+
+    .pagination .current {
+        background-color: #007BFF;
+        color: white;
+        font-weight: bold;
+        border: 1px solid #007BFF;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+   <div class="head_content">
+        <h1 class="title">學生資料管理系統</h1>
+        <h2>目前資料筆數: {{dataCount}}，
+            <a href="/post/">新增學生資料</a>
+        </h2>
+        <form action="/index/" method="get" aria-label="搜尋學生資料">
+            <label for="site_search">搜尋關鍵字:</label>
+            <input type="text" id="site_search" name="site_search" placeholder="請輸入關鍵字" />
+            <button type="submit">搜尋</button>
+        </form>
+   </div>
+
+   <div>
+       {% if status %}
+       <table role="table" aria-label="學生資料列表">
+            <thead>
+                <tr>
+                    <th>學號</th>
+                    <th>姓名</th>
+                    <th>性別</th>
+                    <th>生日</th>
+                    <th>信箱</th>
+                    <th>電話</th>
+                    <th>地址</th>
+                    <th>編輯</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for data in page_obj %}
+                <tr>
+                    <td>{{data.cID}}</td>
+                    <td>{{data.cName}}</td>
+                    <td>{% if data.cSex == "M" %}男{% else %}女{% endif %}</td>
+                    <td>{{data.cBirthday | date:"Y-m-d"}}</td>
+                    <td>{{data.cEmail}}</td>
+                    <td>{{data.cPhone}}</td>
+                    <td>{{data.cAddr}}</td>
+                    <td>
+                        <a href="/edit/{{data.cID}}/">編輯</a> |
+                        <a href="/delete/{{data.cID}}/" onclick="return confirm('確定要刪除嗎？');">刪除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+       </table>
+       {% comment %} <div class="pagination">
+           {% if page_obj.has_previous %}
+                <a href="?page=1">最前頁</a> <!--page是index.views 中的page-->
+                <a href="?page={{page_obj.previous_page_number}}">上一頁</a>           
+           {%endif%}
+
+           {% for num in page_obj.paginator.page_range %}
+           
+             {% if num == page_obj.number %}
+                <span class="current">{{num}}</span>
+             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{num}}">{{num}}</a>
+             {% else %}
+             <a href="?page={{num}}">{{num}}</a>
+             {% endif %}
+
+           {%endfor%}
+
+           {% if page_obj.has_next %}
+           <a href="?page={{page_obj.next_page_number}}">下一頁</a> 
+           <a href="?page={{page_obj.paginator_num_pages}}">最後頁</a>           
+           {%endif%}
+       </div> {% endcomment %}
+       <!--包含search-->
+       <div class="pagination">
+           {% if page_obj.has_previous %}
+                <a href="?page=1 {% if site_search %}&site_search={{site_search}}{% endif %}">最前頁</a> <!--page是index.views 中的page-->
+                <a href="?page={{page_obj.previous_page_number}}{% if site_search %}&site_search={{site_search}}{% endif %}">上一頁</a>           
+           {%endif%}
+
+           {% for num in page_obj.paginator.page_range %}
+           
+             {% if num == page_obj.number %}
+                <span class="current">{{num}}</span>
+             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{num}}{% if site_search %}&site_search={{site_search}}{% endif %}">{{num}}</a>
+             {% endif %}
+
+           {%endfor%}
+
+           {% if page_obj.has_next %}
+                <a href="?page={{page_obj.next_page_number}}{% if site_search %}&site_search={{site_search}}{% endif %}">下一頁</a> 
+                <a href="?page={{page_obj.paginator_num_pages}}{% if site_search %}&site_search={{site_search}}{% endif %}">最後頁</a>           
+           {%endif%}
+       </div> 
+       
+
+
+       {% else %}
+           <div class="no-data">無此資料</div>
+       {% endif %}
+   </div>
+{% endblock %}
