@@ -1,0 +1,12 @@
+{% extends "news_app/base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+  <article>
+    <h1>{{ post.title }}</h1>
+    <p class="date">Published on {{ post.publication_date|date:"F d, Y P" }} by {{ post.author.username }}</p>
+    {{ post.content|linebreaks }}
+  </article>
+  <a href="{% url 'news_app:post_list' %}">Back to news list</a>
+{% endblock %}

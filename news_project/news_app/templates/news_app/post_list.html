@@ -1,0 +1,20 @@
+{% extends "news_app/base.html" %}
+
+{% block title %}News Announcements{% endblock %}
+
+{% block content %}
+  <h1>News Announcements</h1>
+  {% if posts %}
+    <ul>
+      {% for post in posts %}
+        <li>
+          <h2><a href="{% url 'news_app:post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+          <p class="date">Published on {{ post.publication_date|date:"F d, Y P" }} by {{ post.author.username }}</p>
+          <p>{{ post.content|truncatewords:30|linebreaks }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No news announcements yet.</p>
+  {% endif %}
+{% endblock %}
