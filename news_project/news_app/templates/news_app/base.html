@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}My News Site{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'news_app/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'news_app:post_list' %}">News Portal</a></h1>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; {% now "Y" %} News Announcement System</p>
+    </footer>
+</body>
+</html>
